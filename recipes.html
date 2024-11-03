@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎃 Halloween Recipes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #ff6b01;
+            --purple: #6b1b9a;
+            --black: #1a1a1a;
+            --green: #4caf50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--black);
+            color: white;
+            font-family: 'Creepster', cursive;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .menu-toggle {
+            display: none;
+            color: var(--orange);
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            z-index: 1001;
+            padding: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--purple);
+        }
+
+        @media screen and (max-width: 1440px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(26, 26, 26, 0.95);
+                padding: 1rem 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 0.8rem;
+                text-align: center;
+                width: 100%;
+            }
+        }
+
+        .header {
+            padding-top: 100px;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://images.unsplash.com/photo-1509557965875-b88c97052f81') center/cover;
+            padding: 150px 0 50px;
+        }
+
+        .header h1 {
+            color: var(--orange);
+            font-size: 3rem;
+            text-shadow: 0 0 10px rgba(255, 107, 1, 0.5);
+        }
+
+        .recipes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .recipe-card {
+            background: rgba(107, 27, 154, 0.2);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recipe-header {
+            background: var(--purple);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recipe-title {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .recipe-time {
+            background: var(--orange);
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        .recipe-content {
+            padding: 1.5rem;
+        }
+
+        .ingredients-list {
+            margin-bottom: 1.5rem;
+        }
+
+        .ingredients-list li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .ingredients-list li::before {
+            content: '🎃';
+            margin-right: 10px;
+        }
+
+        .instructions {
+            margin-bottom: 1.5rem;
+        }
+
+        .instructions ol {
+            padding-left: 2rem;
+        }
+
+        .instructions li {
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-meter {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-meter span {
+            color: var(--orange);
+        }
+
+        .recipe-tags {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: var(--orange);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .recipe-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .recipe-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .recipe-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <button class="menu-toggle">☰</button>
+        <div class="nav-links">
+            <a href="index.html">Главная</a>
+            <a href="costumes.html">Костюмы</a>
+            <a href="game.html">Игра</a>
+            <a href="party.html">Вечеринка</a>
+        </div>
+    </nav>
+
+    <header class="header">
+        <h1>🎃 Жуткие рецепты 🎃</h1>
+    </header>
+
+    <div class="recipes-container">
+        <div class="recipe-card">
+            <div class="recipe-header">
+                <h2 class="recipe-title">Печенье "Пальцы ведьмы"</h2>
+                <div class="recipe-time">⏰ 30 минут</div>
+            </div>
+            <div class="recipe-content">
+                <div class="difficulty-meter">
+                    Сложность: <span>⭐⭐</span>
+                </div>
+                <div class="ingredients-list">
+                    <h3>Ингредиенты:</h3>
+                    <ul>
+                        <li>200г муки</li>
+                        <li>100г сливочного масла</li>
+                        <li>100г сахара</li>
+                        <li>1 яйцо</li>
+                        <li>Миндаль для ногтей</li>
+                        <li>Красный джем для "крови"</li>
+                    </ul>
+                </div>
+                <div class="instructions">
+                    <h3>Инструкция:</h3>
+                    <ol>
+                        <li>Смешайте масло с сахаром до однородной массы</li>
+                        <li>Добавьте яйцо и перемешайте</li>
+                        <li>Постепенно всыпьте муку и замесите тесто</li>
+                        <li>Сформируйте "пальцы" и украсьте миндалем</li>
+                        <li>Выпекайте 15 минут при 180°C</li>
+                        <li>Украсьте джемом для эффекта крови</li>
+                    </ol>
+                </div>
+                <div class="recipe-tags">
+                    <span class="tag">Печенье</span>
+                    <span class="tag">Десерт</span>
+                    <span class="tag">Для детей</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-card">
+            <div class="recipe-header">
+                <h2 class="recipe-title">Тыквенный суп "Ведьмино зелье"</h2>
+                <div class="recipe-time">⏰ 45 минут</div>
+            </div>
+            <div class="recipe-content">
+                <div class="difficulty-meter">
+                    Сложность: <span>⭐⭐⭐</span>
+                </div>
+                <div class="ingredients-list">
+                    <h3>Ингредиенты:</h3>
+                    <ul>
+                        <li>1 средняя тыква</li>
+                        <li>2 картофелины</li>
+                        <li>1 луковица</li>
+                        <li>2 зубчика чеснока</li>
+                        <li>Сливки 200мл</li>
+                        <li>Специи по вкусу</li>
+                    </ul>
+                </div>
+                <div class="instructions">
+                    <h3>Инструкция:</h3>
+                    <ol>
+                        <li>Очистите и нарежьте тыкву кубиками</li>
+                        <li>Обжарьте лук и чеснок</li>
+                        <li>Добавьте тыкву и картофель</li>
+                        <li>Залейте водой и варите до готовности</li>
+                        <li>Измельчите блендером</li>
+                        <li>Добавьте сливки и специи</li>
+                    </ol>
+                </div>
+                <div class="recipe-tags">
+                    <span class="tag">Суп</span>
+                    <span class="tag">Горячее</span>
+                    <span class="tag">Тыква</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-card">
+            <div class="recipe-header">
+                <h2 class="recipe-title">Кровавый пунш "Вампирский восторг"</h2>
+                <div class="recipe-time">⏰ 15 минут</div>
+            </div>
+            <div class="recipe-content">
+                <div class="difficulty-meter">
+                    Сложность: <span>⭐</span>
+                </div>
+                <div class="ingredients-list">
+                    <h3>Ингредиенты:</h3>
+                    <ul>
+                        <li>Гранатовый сок 1л</li>
+                        <li>Апельсиновый сок 0.5л</li>
+                        <li>Газированная вода 0.5л</li>
+                        <li>Лёд</li>
+                        <li>Мармеладные червячки для декора</li>
+                    </ul>
+                </div>
+                <div class="instructions">
+                    <h3>Инструкция:</h3>
+                    <ol>
+                        <li>Смешайте все соки в большом кувшине</li>
+                        <li>Добавьте газированную воду</li>
+                        <li>Положите лёд</li>
+                        <li>Украсьте мармеладными червячками</li>
+                    </ol>
+                </div>
+                <div class="recipe-tags">
+                    <span class="tag">Напиток</span>
+                    <span class="tag">Безалкогольный</span>
+                    <span class="tag">Для вечеринки</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Обработка меню
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                navLinks.classList.toggle('active');
+            });
+
+            // Закрытие меню при клике вне его
+            document.addEventListener('click', function(e) {
+                if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                }
+            });
+
+            // Закрытие меню при клике на ссылку
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // Анимация появления рецептов
+            const recipeCards = document.querySelectorAll('.recipe-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            recipeCards.forEach(card => {
+                card.style.transition = 'all 0.5s ease';
+                observer.observe(card);
+            });
+
+            // Эффекты для тегов
+            const tags = document.querySelectorAll('.tag');
+            tags.forEach(tag => {
+                tag.addEventListener('mouseover', () => {
+                    tag.style.transform = 'scale(1.1)';
+                });
+                tag.addEventListener('mouseout', () => {
+                    tag.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
