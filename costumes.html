@@ -123,7 +123,53 @@
             transition: transform 0.3s ease;
             position: relative;
         }
+        .tutorial-btn {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
 
+        .tutorial-btn:hover {
+            background: var(--purple);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--black);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
         .costume-card:hover {
             transform: translateY(-10px);
         }
@@ -208,6 +254,54 @@
                 flex-wrap: wrap;
             }
         }
+
+         .tutorial-btn {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        .tutorial-btn:hover {
+            background: var(--purple);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--black);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
 </head>
@@ -234,38 +328,44 @@
 
     <div class="costume-gallery">
         <div class="costume-card">
-            <img src="https://images.unsplash.com/photo-1604609165678-096d0b581cd1" alt="Вампир" class="costume-image">
+            <img src="https://ae04.alicdn.com/kf/S4f5a76626da5440088b8f67c601f227ce.jpg" alt="Вампир" class="costume-image">
             <div class="costume-info">
                 <h3>Классический Вампир</h3>
                 <p>Элегантный и простой костюм вампира</p>
                 <div class="difficulty">
                     Сложность: <span>⭐</span>
                 </div>
-                <button class="tutorial-btn">Смотреть туториал</button>
+                <button class="tutorial-btn" onclick="showTutorial('vampire')">Смотреть</button>
             </div>
         </div>
 
         <div class="costume-card">
-            <img src="https://images.unsplash.com/photo-1509248961158-e54f6934749c" alt="Ведьма" class="costume-image">
+            <img src="https://ae01.alicdn.com/kf/HTB1P2qWLpXXXXccXVXXq6xXFXXXm/2016-New-Halloween-costume-Funny-Emerald-Witch-Costume-L15384.jpg" alt="Ведьма" class="costume-image">
             <div class="costume-info">
                 <h3>Ведьма</h3>
                 <p>Традиционный костюм ведьмы с современным твистом</p>
                 <div class="difficulty">
                     Сложность: <span>⭐⭐</span>
                 </div>
-                <button class="tutorial-btn">Смотреть туториал</button>
+                <button class="tutorial-btn" onclick="showTutorial('vedima')">Смотреть</button>
             </div>
         </div>
-
+        <div class="modal" id="tutorial-modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeTutorial()">✖</button>
+                <h2 id="tutorial-title"></h2>
+                <div id="tutorial-steps"></div>
+            </div>
+        </div>
         <div class="costume-card">
-            <img src="https://images.unsplash.com/photo-1506438039605-31b927780163" alt="Зомби" class="costume-image">
+            <img src="https://avatars.mds.yandex.net/i?id=0570757ec37228cf62e1d843f92bbadc_l-5344516-images-thumbs&n=13" alt="Зомби" class="costume-image">
             <div class="costume-info">
                 <h3>Зомби</h3>
                 <p>Реалистичный грим и костюм зомби</p>
                 <div class="difficulty">
                     Сложность: <span>⭐⭐⭐</span>
                 </div>
-                <button class="tutorial-btn">Смотреть туториал</button>
+                <button class="tutorial-btn" onclick="showTutorial('zombi')">Смотреть</button>
             </div>
         </div>
     </div>
@@ -322,6 +422,62 @@
                 observer.observe(card);
             });
         });
+        
+        const tutorials = {
+           
+            vampire: {
+                title: "Костюм вампира",
+                steps: [
+                    "Одежда: черный или красный плащ, белая рубашка, темные брюки или юбка",
+"Макияж: бледный тон кожи, яркие губы (красные или черные), темные круги под глазами",
+"Прическа: аккуратная, с зачесанными назад волосами или небрежные локоны",
+"Аксессуары: накладные клыки, кольца, темные перчатки",
+"Обувь: черные ботинки или туфли."
+                ]
+            },
+            vedima: {
+                title: "Костюм ведьмы :",
+                steps: [
+                    "Платье: черное или темное, может быть длинным или коротким, с рюшами или корсетом.",
+                    "Плащ: черный или темно-фиолетовый, часто с капюшоном.",
+                    "Мётла: символический аксессуар, сделанная из палки и веток или соломы.",
+                    "Обувь: черные ботинки или сапоги, предпочтительно на каблуках.",
+                     "Аксессуары: кольца, браслеты, кулоны с магической символикой.",
+                     "Макияж: темные оттенки для глаз и яркие губные помады.",
+                     "Прическа: длинные волосы, заплетенные в косы или небрежные локоны."
+                ]
+            },
+            zombi: {
+                title: "Костюм зомби",
+                steps: [
+                 "Одежда: рваные старые вещи (футболки, джинсы)",
+"Макияж: бледный тон кожи, темные круги под глазами, искусственная кровь",
+"Прическа: растрепанные или грязные волосы",
+"Аксессуары: накладные зубы, рваные рукавицы",
+"Обувь: старые, грязные ботинки"
+
+                ]
+            }
+        };
+
+        function showTutorial(type) {
+            const modal = document.getElementById('tutorial-modal');
+            const title = document.getElementById('tutorial-title');
+            const steps = document.getElementById('tutorial-steps');
+            
+            title.textContent = tutorials[type].title;
+            steps.innerHTML = `
+                <ol class="step-list">
+                    ${tutorials[type].steps.map(step => `<li>${step}</li>`).join('')}
+                </ol>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeTutorial() {
+            document.getElementById('tutorial-modal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
