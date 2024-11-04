@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎭 Halloween Costumes Gallery</title>
+    <style>
+        :root {
+            --orange: #ff6b01;
+            --purple: #6b1b9a;
+            --black: #1a1a1a;
+            --green: #4caf50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--black);
+            color: white;
+            font-family: 'Creepster', cursive;
+        }
+
+        /* Обновленные стили навигации */
+        .navbar {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .menu-toggle {
+            display: none;
+            color: var(--orange);
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            z-index: 1001;
+            padding: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--purple);
+        }
+
+        /* Медиа-запросы для навигации */
+        @media screen and (max-width: 1440px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(26, 26, 26, 0.95);
+                padding: 1rem 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 0.8rem;
+                text-align: center;
+                width: 100%;
+            }
+        }
+
+        /* Оставшиеся стили без изменений */
+        .header {
+            padding-top: 100px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: var(--orange);
+            font-size: 3rem;
+            text-shadow: 0 0 10px rgba(255, 107, 1, 0.5);
+        }
+
+        .costume-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .costume-card {
+            background: rgba(107, 27, 154, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .tutorial-btn {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        .tutorial-btn:hover {
+            background: var(--purple);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--black);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .costume-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .costume-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .costume-info {
+            padding: 1.5rem;
+        }
+
+        .costume-info h3 {
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .costume-info p {
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty span {
+            color: var(--orange);
+        }
+
+        .tutorial-btn {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .tutorial-btn:hover {
+            background: var(--purple);
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .filter-btn {
+            background: var(--purple);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--orange);
+        }
+
+        @media (max-width: 768px) {
+            .costume-gallery {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .filters {
+                flex-wrap: wrap;
+            }
+        }
+
+         .tutorial-btn {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        .tutorial-btn:hover {
+            background: var(--purple);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--black);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <button class="menu-toggle">☰</button>
+        <div class="nav-links">
+            <a href="halloween.html">Главная</a>
+            <a href="recipes-h.html">Рецепты</a>
+            <a href="game-h.html">Игра</a>
+            <a href="party-h.html">Вечеринка</a>
+        </div>
+    </nav>
+    <header class="header">
+        <h1>🎭 Галерея костюмов 🎭</h1>
+    </header>
+
+    <div class="filters">
+        <button class="filter-btn active">Все</button>
+        <button class="filter-btn">Простые</button>
+        <button class="filter-btn">Средние</button>
+        <button class="filter-btn">Сложные</button>
+    </div>
+
+    <div class="costume-gallery">
+        <div class="costume-card">
+            <img src="https://ae04.alicdn.com/kf/S4f5a76626da5440088b8f67c601f227ce.jpg" alt="Вампир" class="costume-image">
+            <div class="costume-info">
+                <h3>Классический Вампир</h3>
+                <p>Элегантный и простой костюм вампира</p>
+                <div class="difficulty">
+                    Сложность: <span>⭐</span>
+                </div>
+                <button class="tutorial-btn" onclick="showTutorial('vampire')">Смотреть</button>
+            </div>
+        </div>
+
+        <div class="costume-card">
+            <img src="https://ae01.alicdn.com/kf/HTB1P2qWLpXXXXccXVXXq6xXFXXXm/2016-New-Halloween-costume-Funny-Emerald-Witch-Costume-L15384.jpg" alt="Ведьма" class="costume-image">
+            <div class="costume-info">
+                <h3>Ведьма</h3>
+                <p>Традиционный костюм ведьмы с современным твистом</p>
+                <div class="difficulty">
+                    Сложность: <span>⭐⭐</span>
+                </div>
+                <button class="tutorial-btn" onclick="showTutorial('vedima')">Смотреть</button>
+            </div>
+        </div>
+        <div class="modal" id="tutorial-modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeTutorial()">✖</button>
+                <h2 id="tutorial-title"></h2>
+                <div id="tutorial-steps"></div>
+            </div>
+        </div>
+        <div class="costume-card">
+            <img src="https://avatars.mds.yandex.net/i?id=0570757ec37228cf62e1d843f92bbadc_l-5344516-images-thumbs&n=13" alt="Зомби" class="costume-image">
+            <div class="costume-info">
+                <h3>Зомби</h3>
+                <p>Реалистичный грим и костюм зомби</p>
+                <div class="difficulty">
+                    Сложность: <span>⭐⭐⭐</span>
+                </div>
+                <button class="tutorial-btn" onclick="showTutorial('zombi')">Смотреть</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Обработка меню
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                navLinks.classList.toggle('active');
+            });
+
+            // Закрытие меню при клике вне его
+            document.addEventListener('click', function(e) {
+                if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                }
+            });
+
+            // Закрытие меню при клике на ссылку
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // Существующий код для фильтров и анимаций
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+
+            const cards = document.querySelectorAll('.costume-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'all 0.5s ease';
+                observer.observe(card);
+            });
+        });
+        
+        const tutorials = {
+           
+            vampire: {
+                title: "Костюм вампира",
+                steps: [
+                    "Одежда: черный или красный плащ, белая рубашка, темные брюки или юбка",
+"Макияж: бледный тон кожи, яркие губы (красные или черные), темные круги под глазами",
+"Прическа: аккуратная, с зачесанными назад волосами или небрежные локоны",
+"Аксессуары: накладные клыки, кольца, темные перчатки",
+"Обувь: черные ботинки или туфли."
+                ]
+            },
+            vedima: {
+                title: "Костюм ведьмы :",
+                steps: [
+                    "Платье: черное или темное, может быть длинным или коротким, с рюшами или корсетом.",
+                    "Плащ: черный или темно-фиолетовый, часто с капюшоном.",
+                    "Мётла: символический аксессуар, сделанная из палки и веток или соломы.",
+                    "Обувь: черные ботинки или сапоги, предпочтительно на каблуках.",
+                     "Аксессуары: кольца, браслеты, кулоны с магической символикой.",
+                     "Макияж: темные оттенки для глаз и яркие губные помады.",
+                     "Прическа: длинные волосы, заплетенные в косы или небрежные локоны."
+                ]
+            },
+            zombi: {
+                title: "Костюм зомби",
+                steps: [
+                 "Одежда: рваные старые вещи (футболки, джинсы)",
+"Макияж: бледный тон кожи, темные круги под глазами, искусственная кровь",
+"Прическа: растрепанные или грязные волосы",
+"Аксессуары: накладные зубы, рваные рукавицы",
+"Обувь: старые, грязные ботинки"
+
+                ]
+            }
+        };
+
+        function showTutorial(type) {
+            const modal = document.getElementById('tutorial-modal');
+            const title = document.getElementById('tutorial-title');
+            const steps = document.getElementById('tutorial-steps');
+            
+            title.textContent = tutorials[type].title;
+            steps.innerHTML = `
+                <ol class="step-list">
+                    ${tutorials[type].steps.map(step => `<li>${step}</li>`).join('')}
+                </ol>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeTutorial() {
+            document.getElementById('tutorial-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

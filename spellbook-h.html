@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 Книга Заклинаний</title>
+    <style>
+        :root {
+            --orange: #ff6b01;
+            --purple: #6b1b9a;
+            --black: #1a1a1a;
+            --parchment: #f4d03f;
+            --book-brown: #8B4513;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--black);
+            color: #333;
+            font-family: 'MedievalSharp', cursive;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+        }
+
+        .navbar {
+            background: rgba(26, 26, 26, 0.9);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--purple);
+        }
+
+        .book {
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            margin: 80px auto 20px;
+            position: relative;
+            transition: transform 0.5s;
+            transform-style: preserve-3d;
+        }
+
+        .book.open {
+            transform: rotateY(-180deg);
+        }
+
+        .book-cover,
+        .book-page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .book-cover {
+            background: linear-gradient(45deg, var(--book-brown), #5D4037);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 
+                -5px 5px 15px rgba(0, 0, 0, 0.3),
+                inset 0 0 50px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .book-cover::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/leather.png');
+            opacity: 0.3;
+        }
+
+        .cover-title {
+            color: var(--parchment);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-title h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .cover-title p {
+            font-size: 1.5em;
+            color: #DEB887;
+        }
+
+        .book-page {
+            background: var(--parchment);
+            transform: rotateY(180deg);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 40px;
+            overflow-y: auto;
+            background-image: url('https://www.transparenttextures.com/patterns/old-paper.png');
+        }
+
+        .spell-card {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .spell-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .spell-name {
+            font-size: 1.5rem;
+            color: var(--purple);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 5px;
+        }
+
+        .spell-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .spell-ingredients {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        .spell-difficulty {
+            color: var(--orange);
+            font-size: 1.1rem;
+        }
+
+        .book-decoration {
+            position: absolute;
+            width: 60px;
+            height: 100%;
+            right: -30px;
+            top: 0;
+            background: var(--book-brown);
+            transform: rotateY(-20deg);
+            box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .magic-effects {
+            position: fixed;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--orange);
+            border-radius: 50%;
+            animation: sparkle 1s linear forwards;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .book-page {
+                grid-template-columns: 1fr;
+            }
+
+            .cover-title h1 {
+                font-size: 3em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="index.html">Главная</a>
+            <a href="costumes.html">Костюмы</a>
+            <a href="recipes.html">Рецепты</a>
+            <a href="game.html">Игра</a>
+            <a href="party.html">Вечеринка</a>
+        </div>
+    </nav>
+
+    <div class="book" id="book">
+        <div class="book-cover" onclick="toggleBook()">
+            <div class="cover-title">
+                <h1>Книга<br>Заклинаний</h1>
+                <p>Нажмите, чтобы открыть</p>
+            </div>
+        </div>
+        <div class="book-page">
+            <div class="spell-card" onclick="castSpell(this, 'sparkle')">
+                <div class="spell-name">
+                    🌟 Искрящиеся Огни
+                </div>
+                <div class="spell-description">
+                    Создает волшебные огни, которые освещают тёмные углы и отпугивают злых духов.
+                </div>
+                <div class="spell-ingredients">
+                    Требуется: Светлячки, лунный свет, звёздная пыль
+                </div>
+                <div class="spell-difficulty">
+                    Сложность: ⭐⭐
+                </div>
+            </div>
+
+            <div class="spell-card" onclick="castSpell(this, 'transform')">
+                <div class="spell-name">
+                    🎃 Тыквенное Превращение
+                </div>
+                <div class="spell-description">
+                    Превращает обычную тыкву в жуткий светильник Джека.
+                </div>
+                <div class="spell-ingredients">
+                    Требуется: Тыква, свеча, щепотка магии
+                </div>
+                <div class="spell-difficulty">
+                    Сложность: ⭐
+                </div>
+            </div>
+
+            <div class="spell-card" onclick="castSpell(this, 'ghost')">
+                <div class="spell-name">
+                    👻 Призыв Духов
+                </div>
+                <div class="spell-description">
+                    Вызывает дружелюбных призраков для создания атмосферы.
+                </div>
+                <div class="spell-ingredients">
+                    Требуется: Эктоплазма, лунный камень, свеча
+                </div>
+                <div class="spell-difficulty">
+                    Сложность: ⭐⭐⭐
+                </div>
+            </div>
+
+            <div class="spell-card" onclick="castSpell(this, 'potion')">
+                <div class="spell-name">
+                    🧪 Зелье Невидимости
+                </div>
+                <div class="spell-description">
+                    Делает выпившего невидимым на короткое время.
+                </div>
+                <div class="spell-ingredients">
+                    Требуется: Туманные грибы, росу полнолуния, паутину
+                </div>
+                <div class="spell-difficulty">
+                    Сложность: ⭐⭐⭐⭐
+                </div>
+            </div>
+        </div>
+        <div class="book-decoration"></div>
+    </div>
+
+    <div class="magic-effects" id="magicEffects"></div>
+
+    <script>
+        function toggleBook() {
+            document.getElementById('book').classList.toggle('open');
+        }
+
+        function castSpell(element, spellType) {
+            const rect = element.getBoundingClientRect();
+            
+            switch(spellType) {
+                case 'sparkle':
+                    createSparkles(rect);
+                    break;
+                case 'transform':
+                    element.style.transform = 'scale(1.1) rotate(360deg)';
+                    setTimeout(() => {
+                        element.style.transform = 'scale(1) rotate(0deg)';
+                    }, 1000);
+                    break;
+                case 'ghost':
+                    createGhost(rect);
+                    break;
+                case 'potion':
+                    element.style.opacity = '0.3';
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                    }, 2000);
+                    break;
+            }
+        }
+
+        function createSparkles(rect) {
+            for(let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = rect.left + Math.random() * rect.width + 'px';
+                sparkle.style.top = rect.top + Math.random() * rect.height + 'px';
+                document.getElementById('magicEffects').appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 1000);
+            }
+        }
+
+        function createGhost(rect) {
+            const ghost = document.createElement('div');
+            ghost.innerHTML = '👻';
+            ghost.style.position = 'absolute';
+            ghost.style.left = rect.left + 'px';
+            ghost.style.top = rect.top + 'px';
+            ghost.style.fontSize = '2rem';
+            ghost.style.transition = 'all 2s ease';
+            document.getElementById('magicEffects').appendChild(ghost);
+
+            setTimeout(() => {
+                ghost.style.transform = 'translateY(-100px) scale(0)';
+                ghost.style.opacity = '0';
+            }, 100);
+
+            setTimeout(() => ghost.remove(), 2000);
+        }
+    </script>
+</body>
+</html>

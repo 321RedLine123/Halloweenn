@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Halloween Party</title>
+    <style>
+        :root {
+            --orange: #ff6b01;
+            --purple: #6b1b9a;
+            --black: #1a1a1a;
+            --green: #4caf50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--black);
+            color: white;
+            font-family: 'Creepster', cursive;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 26, 0.9);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--purple);
+        }
+
+        .party-header {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://images.unsplash.com/photo-1509557965875-b88c97052f81') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .floating-ghosts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .ghost {
+            position: absolute;
+            font-size: 3rem;
+            animation: float 6s infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-30px) translateX(20px);
+            }
+        }
+
+        .party-header h1 {
+            font-size: 4.5rem;
+            color: var(--orange);
+            text-shadow: 0 0 20px rgba(255, 107, 1, 0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(255, 107, 1, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(255, 107, 1, 0.8);
+            }
+        }
+
+        .countdown-container {
+            background: var(--purple);
+            padding: 2rem;
+            margin-top: -50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .countdown-item {
+            text-align: center;
+        }
+
+        .countdown-value {
+            font-size: 3rem;
+            color: var(--orange);
+            text-shadow: 0 0 10px rgba(255, 107, 1, 0.3);
+        }
+
+        .countdown-label {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .party-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .party-details {
+            background: rgba(107, 27, 154, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .info-card {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h2 {
+            color: var(--orange);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rsvp-form {
+            background: var(--purple);
+            padding: 2rem;
+            border-radius: 15px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--orange);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: 2px solid var(--orange);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--green);
+            transform: translateY(-2px);
+        }
+
+        .guest-list {
+            margin-top: 2rem;
+        }
+
+        .guest-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .costume-badge {
+            background: var(--orange);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .spooky-decoration {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 3rem;
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .party-content {
+                grid-template-columns: 1fr;
+            }
+
+            .party-header h1 {
+                font-size: 3rem;
+            }
+
+            .countdown {
+                flex-wrap: wrap;
+            }
+
+            .rsvp-form {
+                position: static;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="halloween.html">Главная</a>
+            <a href="costumes-h.html">Костюмы</a>
+            <a href="recipes-h.html">Рецепты</a>
+            <a href="game-h.html">Игра</a>
+        </div>
+    </nav>
+
+    <header class="party-header">
+        <div class="floating-ghosts">
+            <span class="ghost">👻</span>
+            <span class="ghost" style="top: 20%; left: 20%">👻</span>
+            <span class="ghost" style="top: 70%; left: 80%">👻</span>
+        </div>
+        <h1>🎃 Хэллоуин Вечеринка 2023 🎃</h1>
+    </header>
+
+    <div class="countdown-container">
+        <div class="countdown" id="countdown">
+            <div class="countdown-item">
+                <div class="countdown-value" id="days">00</div>
+                <div class="countdown-label">Дней</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="hours">00</div>
+                <div class="countdown-label">Часов</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="minutes">00</div>
+                <div class="countdown-label">Минут</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="seconds">00</div>
+                <div class="countdown-label">Секунд</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="party-content">
+        <div class="party-details">
+            <div class="info-card">
+                <h2>📅 Детали мероприятия</h2>
+                <p>Дата: 31 октября 2025</p>
+                <p>Время: 20:00 - 00:00</p>
+                <p>Место: Дом с привидениями на Жуткой улице, 13</p>
+            </div>
+
+            <div class="info-card">
+                <h2>🎭 Дресс-код</h2>
+                <p>Обязательно приходите в костюме!</p>
+                <p>Призы за лучшие костюмы:</p>
+                <ul>
+                    <li>1 место - Золотая тыква</li>
+                    <li>2 место - Серебряное привидение</li>
+                    <li>3 место - Бронзовая метла</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h2>🎪 Развлечения</h2>
+                <ul>
+                    <li>Яблочный боб</li>
+                    <li>Конкурс костюмов</li>
+                    <li>Комната страха</li>
+                    <li>Гадание на свечах</li>
+                    <li>Танцы с вампирами</li>
+                </ul>
+            </div>
+
+            <div class="guest-list">
+                <h2>👥 Уже идут</h2>
+                <div id="guestsList"></div>
+            </div>
+        </div>
+
+        <div class="rsvp-form">
+            <h2>✉️ Регистрация на вечеринку</h2>
+            <form id="partyForm">
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" required placeholder="Ваше имя">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" required placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Костюм</label>
+                    <select required>
+                        <option value="">Выберите костюм</option>
+                        <option>Вампир</option>
+                        <option>Зомби</option>
+                        <option>Ведьма</option>
+                        <option>Призрак</option>
+                        <option>Оборотень</option>
+                        <option>Скелет</option>
+                        <option>Другое</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Сообщение (необязательно)</label>
+                    <textarea rows="3" placeholder="Ваше сообщение..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="spooky-decoration">🎃</div>
+
+    <script>
+        // Обратный отсчет
+        function updateCountdown() {
+            const halloween = new Date('October 31, 2025 20:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = halloween - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+
+        // Форма регистрации
+        const partyForm = document.getElementById('partyForm');
+        const guestsList = document.getElementById('guestsList');
+
+        partyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(partyForm);
+            
+            const guestCard = document.createElement('div');
+            guestCard.className = 'guest-card';
+            guestCard.innerHTML = `
+                <div>${formData.get('name')}</div>
+                <div class="costume-badge">${formData.get('costume')}</div>
+            `;
+            
+            guestsList.appendChild(guestCard);
+            partyForm.reset();
+        });
+
+        // Анимация призраков
+        const ghosts = document.querySelectorAll('.ghost');
+        ghosts.forEach((ghost, index) => {
+            ghost.style.animationDelay = `${index * 2}s`;
+        });
+    </script>
+</body>
+</html>

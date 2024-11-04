@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поймай подарки - Новогодняя игра</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Стили для навигации */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            float: left;
+            padding: 0.5rem;
+        }
+
+        .burger-menu {
+            display: none;
+            cursor: pointer;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1002;
+            padding: 0.5rem;
+        }
+
+        .burger-menu span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        .burger-menu.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .burger-menu.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-menu.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .nav-menu li {
+            margin: 0 1rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-menu a.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Игровые стили */
+        .content {
+            padding-top: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: calc(100vh - 150px);
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem;
+            text-align: center;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .game-area {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        #player {
+            position: absolute;
+            bottom: 20px;
+            width: 60px;
+            height: 60px;
+            background: url('meh.png') no-repeat center;
+            background-size: contain;
+            transition: left 0.1s ease;
+        }
+
+        .present {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: url('pod.png') no-repeat center;
+            background-size: contain;
+            transition: transform 0.1s linear;
+        }
+
+        .controls {
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Мобильные контролы */
+        .mobile-controls {
+            display: none;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding: 0 2rem;
+        }
+
+        .mobile-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .mobile-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Медиа запросы */
+        @media (max-width: 768px) {
+            .burger-menu {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.95);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 1001;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+
+            .nav-menu a {
+                background: rgba(0, 0, 0, 0.7);
+                padding: 0.7rem 1.5rem;
+                border-radius: 10px;
+            }
+
+            .nav-menu a:hover,
+            .nav-menu a.active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .mobile-controls {
+                display: flex;
+            }
+
+            .game-area {
+                height: 400px;
+            }
+
+            .game-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .game-stats {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-area {
+                height: 350px;
+            }
+
+            #player {
+                width: 50px;
+                height: 50px;
+            }
+
+            .present {
+                width: 25px;
+                height: 25px;
+            }
+
+            .mobile-btn {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Новый Год</div>
+        <div class="burger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="new-year.html">Главная</a></li>
+            <li><a href="games.html" class="active">Игры</a></li>
+            <li><a href="index.html">Другие праздники</a></li>
+            <li><a href="costumes.html">Костюмы</a></li>
+            <li><a href="recipes.html">Рецепты</a></li>
+            <li><a href="decorations.html">Украшения</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        <div class="game-container">
+            <h1>Поймай подарки</h1>
+            <p>Помогите Деду Морозу собрать все подарки!</p>
+            <div class="game-stats">
+                <div>Очки: <span id="score">0</span></div>
+                <div>Время: <span id="time">60</span></div>
+            </div>
+            <div class="game-area">
+                <div id="player"></div>
+            </div>
+            <div class="controls">
+                <button class="btn" id="startBtn">Начать игру</button>
+                <button class="btn" id="restartBtn" style="display: none;">Играть снова</button>
+            </div>
+            <div class="mobile-controls">
+                <button class="mobile-btn" id="leftBtn">←</button>
+                <button class="mobile-btn" id="rightBtn">→</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Game {
+            constructor() {
+                this.player = document.getElementById('player');
+                this.gameArea = document.querySelector('.game-area');
+                this.scoreElement = document.getElementById('score');
+                this.timeElement = document.getElementById('time');
+                this.startBtn = document.getElementById('startBtn');
+                this.restartBtn = document.getElementById('restartBtn');
+                this.leftBtn = document.getElementById('leftBtn');
+                this.rightBtn = document.getElementById('rightBtn');
+                
+                this.score = 0;
+                this.timeLeft = 60;
+                this.gameInterval = null;
+                this.presents = [];
+                this.playerX = 0;
+                this.gameActive = false;
+                this.moveInterval = null;
+
+                this.init();
+            }
+
+            init() {
+                // Инициализация бургер-меню
+                const burgerMenu = document.querySelector('.burger-menu');
+                const navMenu = document.querySelector('.nav-menu');
+
+                burgerMenu.addEventListener('click', () => {
+                    burgerMenu.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+
+                // Закрытие меню при клике на пункт меню
+                document.querySelectorAll('.nav-menu a').forEach(item => {
+                    item.addEventListener('click', () => {
+                        burgerMenu.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+
+                this.startBtn.addEventListener('click', () => this.startGame());
+                this.restartBtn.addEventListener('click', () => this.restartGame());
+                
+                // Управление клавиатурой
+                document.addEventListener('keydown', (e) => this.handleKeyPress(e));
+                document.addEventListener('keyup', (e) => this.handleKeyUp(e));
+                
+                // Управление мобильными кнопками
+                this.leftBtn.addEventListener('mousedown', () => this.startMove('left'));
+                this.leftBtn.addEventListener('mouseup', () => this.stopMove());
+                this.leftBtn.addEventListener('touchstart', () => this.startMove('left'));
+                this.leftBtn.addEventListener('touchend', () => this.stopMove());
+                this.rightBtn.addEventListener('mousedown', () => this.startMove('right'));
+                this.rightBtn.addEventListener('mouseup', () => this.stopMove());
+                this.rightBtn.addEventListener('touchstart', () => this.startMove('right'));
+                this.rightBtn.addEventListener('touchend', () => this.stopMove());
+
+                // Предотвращение скролла при игре на мобильных устройствах
+                this.gameArea.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                }, { passive: false });
+            }
+
+            startMove(direction) {
+                if (this.moveInterval) return;
+                this.moveInterval = setInterval(() => {
+                    this.movePlayer(direction);
+                }, 50);
+            }
+
+            stopMove() {
+                if (this.moveInterval) {
+                    clearInterval(this.moveInterval);
+                    this.moveInterval = null;
+                }
+            }
+
+            startGame() {
+                this.gameActive = true;
+                this.startBtn.style.display = 'none';
+                this.score = 0;
+                this.timeLeft = 60;
+                this.updateScore();
+                this.updateTime();
+                
+                this.gameInterval = setInterval(() => {
+                    this.updateGame();
+                }, 1000 / 60);
+
+                this.spawnPresent();
+            }
+
+            restartGame() {
+                this.clearPresents();
+                this.restartBtn.style.display = 'none';
+                this.startGame();
+            }
+
+            spawnPresent() {
+                const present = document.createElement('div');
+                present.className = 'present';
+                present.style.left = Math.random() * (this.gameArea.clientWidth - 30) + 'px';
+                present.style.top = '0px';
+                
+                // Случайный начальный поворот и скорость вращения
+                const randomRotation = Math.floor(Math.random() * 360);
+                present.style.transform = `rotate(${randomRotation}deg)`;
+                present.dataset.rotationSpeed = Math.random() * 6 - 3;
+                
+                this.gameArea.appendChild(present);
+                this.presents.push(present);
+            }
+
+            updateGame() {
+                if (!this.gameActive) return;
+
+                this.timeLeft -= 1/60;
+                this.updateTime();
+
+                if (this.timeLeft <= 0) {
+                    this.endGame();
+                    return;
+                }
+
+                this.presents.forEach((present, index) => {
+                    const presentY = parseFloat(present.style.top) || 0;
+                    present.style.top = (presentY + 2) + 'px';
+
+                    // Обновление вращения
+                    const currentRotation = present.style.transform
+                        ? parseFloat(present.style.transform.replace('rotate(', '').replace('deg)', ''))
+                        : 0;
+                    const rotationSpeed = parseFloat(present.dataset.rotationSpeed);
+                    const newRotation = currentRotation + rotationSpeed;
+                    present.style.transform = `rotate(${newRotation}deg)`;
+
+                    if (presentY > this.gameArea.clientHeight) {
+                        present.remove();
+                        this.presents.splice(index, 1);
+                    }
+
+                    if (this.checkCollision(present)) {
+                        present.remove();
+                        this.presents.splice(index, 1);
+                        this.score += 10;
+                        this.updateScore();
+                    }
+                });
+
+                if (Math.random() < 0.02) {
+                    this.spawnPresent();
+                }
+            }
+
+            movePlayer(direction) {
+                if (!this.gameActive) return;
+
+                const currentX = parseFloat(this.player.style.left) || 0;
+                const step = 20;
+                const maxX = this.gameArea.clientWidth - this.player.clientWidth;
+
+if (direction === 'left' && currentX > 0) {
+    this.player.style.left = Math.max(0, currentX - step) + 'px';
+} else if (direction === 'right' && currentX < maxX) {
+    this.player.style.left = Math.min(maxX, currentX + step) + 'px';
+}
+}
+
+handleKeyPress(e) {
+if (e.key === 'ArrowLeft') {
+    this.startMove('left');
+} else if (e.key === 'ArrowRight') {
+    this.startMove('right');
+}
+}
+
+handleKeyUp(e) {
+if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    this.stopMove();
+}
+}
+
+checkCollision(present) {
+const playerRect = this.player.getBoundingClientRect();
+const presentRect = present.getBoundingClientRect();
+
+return !(playerRect.right < presentRect.left || 
+        playerRect.left > presentRect.right || 
+        playerRect.bottom < presentRect.top || 
+        playerRect.top > presentRect.bottom);
+}
+
+updateScore() {
+this.scoreElement.textContent = this.score;
+}
+
+updateTime() {
+this.timeElement.textContent = Math.ceil(this.timeLeft);
+}
+
+clearPresents() {
+this.presents.forEach(present => present.remove());
+this.presents = [];
+}
+
+endGame() {
+this.gameActive = false;
+clearInterval(this.gameInterval);
+this.stopMove();
+alert(`Игра окончена! Ваш счет: ${this.score}`);
+this.restartBtn.style.display = 'inline-block';
+}
+}
+
+// Запуск игры при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+new Game();
+});
+</script>
+</body>
+</html>

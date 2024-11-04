@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор праздника</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 90%;
+            margin: 2rem auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .holidays {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .holiday-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .holiday-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .holiday-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .holiday-name {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .holiday-description {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .holiday-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Выберите праздник</h1>
+        <div class="holidays">
+            <div class="holiday-card" onclick="location.href='new-year.html';">
+                <div class="holiday-icon">🎄</div>
+                <div class="holiday-name">Новый год</div>
+                <div class="holiday-description">Волшебство зимы и новых начинаний</div>
+            </div>
+            <div class="holiday-card" onclick="location.href='halloween.html';">
+                <div class="holiday-icon">🎃</div>
+                <div class="holiday-name">Хэллоуин</div>
+                <div class="holiday-description">Жуткое веселье и сладкие угощения</div>
+            </div>
+            <div class="holiday-card" onclick="location.href='easter.html';">
+                <div class="holiday-icon">🐰</div>
+                <div class="holiday-name">Пасха</div>
+                <div class="holiday-description">Весеннее возрождение и семейные традиции</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
